@@ -66,7 +66,7 @@ class GitGraph():
         messages = {}
         predefinedNodeColor = {}
         
-        digraph = "digraph G { edge [dir=back];"
+        digraph = "digraph G { rankdir=BT; edge [dir=back];"
         #first extract messages
         for line in lines:
             match = re.match(self.pattern, line)
