@@ -172,7 +172,7 @@ class GitGraph():
                         #else:
                             #if "origin" in refEntry:
                             #    continue
-                        nodeInfo += '    "' + refEntry + '"[style=filled,' + style + ']; "' + refEntry + '" -> "' + commitHash + '"\n'
+                        nodeInfo += '    "' + refEntry + '"[style=filled,' + style + ']; "' + commitHash + '" -> "' + refEntry + '" [dir=none]\n'
                 digraph += "    \"" + commitHash + "\"[label=\"" + commitHash + nodeMessage + labelExt + "\\n(" + user + ")\",shape=box,style=filled,fillcolor=" + nodeColor + "];" + link + link2
                 if nodeInfo:
                     digraph += nodeInfo
