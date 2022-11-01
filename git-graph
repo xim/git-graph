@@ -35,7 +35,7 @@ class GitGraph():
         else:
             revRange = ""
         
-        gitLogCommand = 'git log --pretty=format:"[%ct||%cn||%s||%d] %h %p" --all ' + revRange
+        gitLogCommand = 'git log --pretty=format:"[%ct||%an||%s||%d] %h %p" --all ' + revRange
         logging.info('Git log command: ' + gitLogCommand)
         output = subprocess.Popen(gitLogCommand, shell=True, stdout=subprocess.PIPE, universal_newlines=True)
         (out, err) = output.communicate()
@@ -118,7 +118,7 @@ class GitGraph():
                 if parentHash1 and parentHash2:
                     nodeColor = self.COLOR_NODE_MERGE
                 if message in messages:
-                    # message exists in history - possible cherry-pick -> compare diff hashes
+                    # message exists in history - possible rebase/cherry -> compare diff hashes
                     existingHash = messages[message]
                     if commitHash is not existingHash and date > dates[existingHash]:
                         diffHashOld = self.getCommitDiffHash(existingHash)
@@ -128,7 +128,7 @@ class GitGraph():
                         logging.debug("2 [" + diffHashActual + "]")
                         if diffHashOld == diffHashActual:
                             logging.debug("equal")
-                            digraph += '    "' + str(existingHash) + '"->"' + commitHash + '"[label="Cherry\\nPick",style=dotted,fontcolor="red",color="red"]'
+                            digraph += '    "' + str(existingHash) + '"->"' + commitHash + '"[label="Cherry/Rebase",style=dotted,fontcolor="red",color="red"]'
                             nodeColor = self.COLOR_NODE_CHERRY_PICK
                             #labelExt = "\\nCherry Pick"
                         logging.debug("")
@@ -142,7 +142,7 @@ class GitGraph():
                         logging.debug("Revert match [" + originalMessage + "]")
                         if originalMessage in messages:
                             origRevertHash = messages[originalMessage]
-                            digraph += '    "' + commitHash + '"->"' + str(origRevertHash) + '"[label="Revert",style=dotted,fontcolor="azure4",color="azure4"]'
+                            digraph += '    "' + str(origRevertHash) + '"->"' + commitHash + '"[label="Revert",style=dotted,fontcolor="azure4",color="azure4"]'
                         else:
                             logging.warning('Not able to find the original revert commit for commit ' + commitHash)
                             digraph += '    "revert_' + commitHash + '"[label="", shape=none, height=.0, width=.0]; "' + commitHash + '"->"revert_' + commitHash + '"[label="Revert ??",style=dotted,fontcolor="azure4",color="azure4"];'
